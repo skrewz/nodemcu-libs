@@ -1,6 +1,7 @@
 -- CCS811 i2c library.
 --
 -- Much inspiration from: https://github.com/sxwang/nodemcu-air-quality-monitoring/blob/master/app.lua
+-- (skrewz: confirmed with sxwang 20200225 to licence under MIT.)
 
 -- CCS811 constants
 STATUS_REG = 0x00
