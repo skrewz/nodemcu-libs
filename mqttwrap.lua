@@ -18,14 +18,21 @@ do
   -- Default callbacks:
   local callbacks = {
     err = function() print("mqtt error") end,
-    message = function(topic,message) print("mqtt@topic "..topic.." message: "..message) end,
+    message = function(topic,message) print("unmatched mqtt@topic "..topic.." message: "..message) end,
     disconnect = function() print("mqtt disconnect?") end,
   }
-  
+
   -- To override callbacks:
   local on = function(eventname,cb)
     callbacks[eventname] = cb
   end
+
+  local topicsubscriptions = {
+  }
+  local handletopic = function(topicname,cb)
+    topicsubscriptions[topicname] = cb
+  end
+  
 
   -- Conditional "am I connected" publish function:
   local maybepublish = function (topic,message,qos)
@@ -51,7 +58,16 @@ do
       print(topic .. " partial overflowed message: " .. data )
     end)
     self.m:on("message", function(client, topic, data)
-      callbacks.message(topic,data)
+      handled_already = false
+      for topicmatch,cb in pairs(topicsubscriptions) do
+        if topic == topicmatch then
+          cb(topic,data)
+          handled_already = true
+        end
+      end
+      if not handled_already then
+        callbacks.message(topic,data)
+      end
     end)
     self.m:on("offline", function(client)
       self.mqtt_client_connected = false
@@ -81,6 +97,7 @@ do
     subscribe = subscribe,
     maybepublish = maybepublish,
     on = on,
+    handletopic = handletopic,
   }
 end
 return M
