@@ -21,14 +21,17 @@ do
       function(sec, usec, server, info)
         rtctime.set(sec, usec)
         self.last_ntp_sync, usec, r = rtctime.get()
-        print ("synced NTP")
         if time_boot == nil then
           time_boot = self.last_ntp_sync
         end
         callbacks.sync()
       end,
-      function()
-        print('NTP sync failed!')
+      function(errno, errdesc)
+        if errdesc ~= nil then
+          print(string.format('NTP sync failed! errno=%d, errdesc=%s',errno,errdesc))
+        else
+          print(string.format('NTP sync failed! errno=%d',errno))
+        end
         node.restart()
       end
     )
