@@ -47,7 +47,6 @@ do
   local self = {
     uptime_before_pms5003_trusted = 30,
     rotating_array = {},
-    excessive_bytes = {},
     currently_reading_byte_no = nil,
     sensor_started_at = nil,
     last_consistent_read = nil
