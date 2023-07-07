@@ -52,10 +52,12 @@ do
     -- If this library is called with sda or scl set to nil, we enter I2C reuse
     -- mode, and no reinitialisation is carried out:
     if sda ~= nil and scl ~= nil then
-      print("bme680wrap: initializing i2c")
+      print("bme680wrap: now initializing i2c")
       i2c.setup(i2c_id_for_module, sda, scl, i2c.SLOW)
     end
-    bme680.setup()
+    if bme680.setup() ~= nil then
+      print("bme680wrap: successfully setup() bme680")
+    end
   end
 
   local starttimer = function(interval_ms)
