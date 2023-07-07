@@ -32,7 +32,7 @@ do
 
   local callbacks = {
     datapoint = function(dp) print("datapoint: "..dp) end,
-    err = function(err) print("css811 err: %x"..string.byte(err)) end,
+    err = function(err) print("css811 err: 0x"..string.byte(err)) end,
   }
 
   local on = function(eventname,cb)
@@ -67,7 +67,7 @@ do
   function assert_non_error ()
     local err = read_reg(CCS_811_ADDRESS, ERROR_ID_REG, 1)
     if 0x00 ~= string.byte(err) then
-      self.callbacks.err(err)
+      callbacks.err(err)
     end
   end
 
